@@ -19,17 +19,11 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
-    private String [] arr = {"sdf","234"};
-    List<String> arr2 = Arrays.asList("sss","ddd","qqq","fff","sss","ddd","qqq","fff","sss","ddd","qqq");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ListView listView = (ListView) findViewById(R.id.main_list);
-      //  arr2.addAll(arr2);
-        listView.setAdapter(new MyAdapter());
-
     }
 
 
@@ -54,32 +48,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    private class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return arr2.size();
-        }
-
-        @Override
-        public String  getItem(int position) {
-            return arr2.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_random, parent, false);
-            TextView textView = (TextView) view.findViewById(R.id.random_title);
-            String text = getItem(position);
-            textView.setText(text);
-            return view;
-        }
-    }
-
 }
