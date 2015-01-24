@@ -10,17 +10,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.kpb90.p0031firstproject.modal.News;
+
 
 public class MainActivity extends ActionBarActivity {
     private String [] arr = {"sdf","234"};
-    List<String> arr2 = Arrays.asList("sss","ddd","qqq","fff","sss","ddd","qqq","fff","sss","ddd","qqq");
+    List<News> newsItems = Arrays.asList(new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/gassiev2_1.jpg?itok=-KQB5qfE","Мурат Гассиев победил Теренса Смита"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +65,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private class MyAdapter extends BaseAdapter {
-
         @Override
         public int getCount() {
-            return arr2.size();
+            return newsItems.size();
         }
 
         @Override
-        public String  getItem(int position) {
-            return arr2.get(position);
+        public News getItem(int position) {
+            return newsItems.get(position);
         }
 
         @Override
@@ -74,11 +82,37 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_random, parent, false);
-            TextView textView = (TextView) view.findViewById(R.id.random_title);
-            String text = getItem(position);
-            textView.setText(text);
+            Holder holder;
+            View view;
+
+            if (convertView == null || !(convertView.getTag() instanceof Holder)) {
+                view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_random, parent, false);
+                holder = new Holder(view);
+                view.setTag(holder);
+            } else {
+                view = convertView;
+                holder = (Holder) view.getTag();
+            }
+
+            holder.fillData(getItem(position));
+
             return view;
+        }
+
+        private class Holder {
+            private TextView titleTextView;
+            private ImageView imageView;
+
+            private Holder(View view) {
+                imageView = (ImageView) view.findViewById(R.id.image_view);
+                titleTextView = (TextView) view.findViewById(R.id.text_view);
+            }
+
+            public void fillData(News news) {
+                titleTextView.setText(news.getTitle());
+                Picasso.with(MainActivity.this).load(news.getImageUrl()).into(imageView);
+            }
+
         }
     }
 
