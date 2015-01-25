@@ -1,6 +1,7 @@
 package ru.kpb90.p0031firstproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.renderscript.RenderScript;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -24,12 +25,11 @@ import ru.kpb90.p0031firstproject.modal.News;
 
 
 public class MainActivity extends ActionBarActivity {
-    private String [] arr = {"sdf","234"};
-    List<News> newsItems = Arrays.asList(new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/gassiev2_1.jpg?itok=-KQB5qfE","Мурат Гассиев победил Теренса Смита"),
-                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
-                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
-                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"),
-                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14"));
+    List<News> newsItems = Arrays.asList(new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/gassiev2_1.jpg?itok=-KQB5qfE","Мурат Гассиев победил Теренса Смита", "Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14", "Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14", "Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14", "Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита"),
+                                         new News("http://allboxing.ru/sites/default/files/styles/new_news-list/public/ufn-stockholm-weighin-0045.jpg?itok=OYK3td0z","Фото: Взвешивание UFC on Fox 14", "Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита Мурат Гассиев победил Теренса Смита"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +85,18 @@ public class MainActivity extends ActionBarActivity {
             Holder holder;
             View view;
 
-            if (convertView == null || !(convertView.getTag() instanceof Holder)) {
+            if (convertView == null || !(convertView.getTag(R.id.tag_holder) instanceof Holder)) {
                 view = LayoutInflater.from(MainActivity.this).inflate(R.layout.item_random, parent, false);
                 holder = new Holder(view);
-                view.setTag(holder);
+                view.setTag(R.id.tag_holder, holder);
             } else {
                 view = convertView;
-                holder = (Holder) view.getTag();
+                holder = (Holder) view.getTag(R.id.tag_holder);
             }
-
-            holder.fillData(getItem(position));
-
+            News news = getItem(position);
+            holder.fillData(news);
+            view.setTag(R.id.tag_content, news);
+            view.setOnClickListener(onNewsClickListener);
             return view;
         }
 
@@ -114,6 +115,20 @@ public class MainActivity extends ActionBarActivity {
             }
 
         }
+
+        private final View.OnClickListener onNewsClickListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (v.getTag(R.id.tag_content) instanceof News) {
+                    News news = (News) v.getTag(R.id.tag_content);
+                    Intent intent = new Intent(MainActivity.this, DescriptionActivity.class);
+                    intent.putExtra(DescriptionActivity.EXTRA_NEWS, news);
+                    startActivity(intent);
+                }
+            }
+        };
+
     }
 
 }
